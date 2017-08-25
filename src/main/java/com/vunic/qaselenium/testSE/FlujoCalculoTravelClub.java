@@ -182,7 +182,6 @@ public class FlujoCalculoTravelClub
 
 		return lstCecsDTO;
 	}	
-
 	
 	public void browserFlujoPromocion (WebDriver driver,List<ControlEjecucionCalculoSegmentadoDTO> lstCecsDTO) throws Exception 
 	{
