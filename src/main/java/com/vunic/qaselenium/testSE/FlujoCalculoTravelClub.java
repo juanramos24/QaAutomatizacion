@@ -255,7 +255,6 @@ public class FlujoCalculoTravelClub
 
 				//		    WebElement option_3 = driver.findElement(By.id("startDate"));
 				//		    option_3.click();
-				//		    Thread.sleep(5000);
 
 				// FALTARIA DAR FORMATO DE STRING TO DATE
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
