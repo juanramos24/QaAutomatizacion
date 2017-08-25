@@ -36,6 +36,11 @@ import org.openqa.selenium.interactions.*;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.support.ui.*;
 
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+
+
 public class FlujoCalculoTravelClub 
 {
 
@@ -60,20 +65,36 @@ public class FlujoCalculoTravelClub
 	TravelClubMgr mongoSuggestionMgr = new TravelClubMgr();
 	TravelClubMgr obtenerDatosPruebaMgr = new TravelClubMgr();
 	
+
+    /**
+     * Runs the test case.
+     */
+      public static void main(String args[]) {
+            //junit.textui.TestRunner.run(suite());
+            try {
+                  //junit.textui.TestRunner.run(new FlujoCalculoTravelClub().suite());
+                  new FlujoCalculoTravelClub().testFlujoPromocion();
+
+            } catch (Exception e) {
+            	FactorySvc.Log(FlujoCalculoTravelClub.class).Info("Error al ejecutar el test!!",e);
+            }
+      }
+
 	/**
 	 * Constructor publico por defecto
 	 */
 	public FlujoCalculoTravelClub() 
 	{
+		// Obtener valores configuración instancia Selenium
+		hostSel = FactorySvc.Prop().getProperty(HOST_SEL);
+		puertoSel = FactorySvc.Prop().getProperty(PORT_SEL);
+		urlSel =  String.format(URL_SEL,hostSel,puertoSel);
 	}
 
 	@Before
 	public void setUp() throws Exception 
 	{
-		// Obtener valores configuración instancia Selenium
-		hostSel = FactorySvc.Prop().getProperty(HOST_SEL);
-		puertoSel = FactorySvc.Prop().getProperty(PORT_SEL);
-		urlSel =  String.format(URL_SEL,hostSel,puertoSel);
+
 		
 	}
 
@@ -165,23 +186,35 @@ public class FlujoCalculoTravelClub
 	
 	public void browserFlujoPromocion (WebDriver driver,List<ControlEjecucionCalculoSegmentadoDTO> lstCecsDTO) throws Exception 
 	{
-
-
-
 		for (ControlEjecucionCalculoSegmentadoDTO itemDTO : lstCecsDTO) 
 		{
-
-
-
 			try
 			{
+				//String extentReportFile = System.getProperty("user.dir")+ "\\extentReportFile.html";
+				//String extentReportImage = System.getProperty("user.dir")+ "\\extentReportImage.png";
+				
+				String extentReportFile = "C:"+ "\\extentReportFile.html";
+				String extentReportImage = "C:"+ "\\extentReportImage.png";
+				
+				// Create object of extent report and specify the report file path.
+				ExtentReports extent = new ExtentReports(extentReportFile, false);
+		 
+				// Start the test using the ExtentTest class object.
+				ExtentTest extentTest = extent.startTest("Primera Prueba","Verify WebSite Title");
+				
 				int tiempo = 5000;
 
-				driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/promociones/american");
+				//driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/promociones/american");
+				driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/");
+								
 				Thread.sleep(5000);
+				
+				extentTest.log(LogStatus.INFO, "Browser Launched");
 				
 				// TRAVEL CLUB - Maximize Window
 			    driver.manage().window().maximize();
+			    
+			    extentTest.log(LogStatus.INFO, "Navigated to www.travelclub.cl");
 
 				//**************************************************************************************************************//
 
@@ -223,7 +256,6 @@ public class FlujoCalculoTravelClub
 
 				//		    WebElement option_3 = driver.findElement(By.id("startDate"));
 				//		    option_3.click();
-				//		    Thread.sleep(5000);
 
 				// FALTARIA DAR FORMATO DE STRING TO DATE
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -335,8 +367,8 @@ public class FlujoCalculoTravelClub
 						jse_A1.executeScript("scroll(0, 300);");
 
 						/*   IdentificacionPasajeros identify = new IdentificacionPasajeros();
-			    identify.identificacionPasajero();
-			    System.out.println("Pas� por la identificaci�n del pasajero");*/
+					    identify.identificacionPasajero();
+					    System.out.println("Pas� por la identificaci�n del pasajero");*/
 
 						String result_precio_original_1 = driver.findElement(By.xpath(".//*[@id='checkoutForm']/article/div[1]/div[2]/div[2]/div[2]/ul[1]/li[2]/span[2]")).getText();
 						Thread.sleep(tiempo);
@@ -386,15 +418,9 @@ public class FlujoCalculoTravelClub
 					{
 						System.out.println("CON ERROR");
 						//Intentar 3 Veces
-
-
 					}
-
-
 					System.out.println("SALI FLUJO - TRAVEL CLUB");
 					Thread.sleep(tiempo);
-
-
 				}
 			} 
 			catch (Exception e) 
@@ -405,8 +431,6 @@ public class FlujoCalculoTravelClub
 		System.out.println("************************************Close**********************************************");
 		driver.close();
 	}
-	
-	
 }
 	
 
