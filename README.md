@@ -1,29 +1,13 @@
-# README #
+# Manual de Integración v1.0 - Proyecto Automatizacion Vuelos
 
-This README would normally document whatever steps are necessary to get your application up and running.
+## Nota Importante
 
-### What is this repository for? ###
+Se definiran los siguientes puntos a considerar en el desarrollo de la implemnetacion:
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## Variables de Entorno.
 
-### How do I get set up? ###
+## Ejecucion del Proyecto por Linea de Commando.
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Procedimiento de subida a Git.
 
-### Contribution guidelines ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
