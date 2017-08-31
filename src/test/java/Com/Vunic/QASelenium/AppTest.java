@@ -7,6 +7,9 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
+
+/* DKY */ 
+
 public class AppTest 
     extends TestCase
 {
