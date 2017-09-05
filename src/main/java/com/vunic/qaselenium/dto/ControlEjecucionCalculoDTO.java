@@ -11,6 +11,7 @@ public class ControlEjecucionCalculoDTO extends BaseDTO  implements Serializable
 	 * 
 	 */
 	
+	
 	private static final long serialVersionUID = -3145966731890325985L;
 	
 	private int id;
