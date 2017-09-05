@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class CasoPruebaDTO implements Serializable{
 
 	/**
-	 * 
+	 * kkkk
 	 */
 	private static final long serialVersionUID = -5472347512529817883L;
 	
