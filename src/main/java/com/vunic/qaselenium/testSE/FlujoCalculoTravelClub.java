@@ -1,44 +1,33 @@
 package com.vunic.qaselenium.testSE;
 
-import java.io.*;
 import java.net.URL;
-import java.sql.*;
-import java.sql.PreparedStatement;
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
-import org.bson.Document;
-import org.junit.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-
-import com.mongodb.*;
-import com.mongodb.client.*;
-import com.mysql.jdbc.*;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
-import com.vunic.core.FactorySvc;
-import com.vunic.core.datos.DatosService;
-import com.vunic.core.datos.NoSqlService;
-import com.vunic.qaselenium.datos.impl.MongoOverDAO;
-import com.vunic.qaselenium.dto.ControlEjecucionCalculoDTO;
-import com.vunic.qaselenium.dto.ControlEjecucionCalculoSegmentadoDTO;
-import com.vunic.qaselenium.dto.MongoOverDTO;
-import com.vunic.qaselenium.dto.OverDTO;
-import com.vunic.qaselenium.dto.SuggestionDTO;
-import com.vunic.qaselenium.mgr.TravelClubMgr;
-
-import org.openqa.selenium.firefox.*;
-import org.openqa.selenium.interactions.*;
-import org.openqa.selenium.remote.*;
-import org.openqa.selenium.support.ui.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
+import com.vunic.core.FactorySvc;
+import com.vunic.qaselenium.dto.ControlEjecucionCalculoDTO;
+import com.vunic.qaselenium.dto.ControlEjecucionCalculoSegmentadoDTO;
+import com.vunic.qaselenium.dto.OverDTO;
+import com.vunic.qaselenium.dto.SuggestionDTO;
+import com.vunic.qaselenium.mgr.TravelClubMgr;
 
 
 public class FlujoCalculoTravelClub 
@@ -203,10 +192,13 @@ public class FlujoCalculoTravelClub
 				
 				int tiempo = 5000;
 
-				//driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/promociones/american");
-				driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/");
+				WebDriverWait wait = new WebDriverWait(driver, 30); 
+				WebElement esperarElemento;
+				
+				//driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/");
+				driver.get(baseUrl + "http://travelclub-hypertext-test.herokuapp.com/promociones/american");
 								
-				Thread.sleep(5000);
+				driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 				
 				extentTest.log(LogStatus.INFO, "Browser Launched");
 				
@@ -299,11 +291,16 @@ public class FlujoCalculoTravelClub
 			    System.out.println ("FECHA HASTA *************************************************************************: "+itemDTO.getFecha_hasta_1());
 			    System.out.println (" ");
 			    
-				driver.findElement(By.id("startDate")).sendKeys(fecha1.format(travelDateFrom_1));
-				Thread.sleep(tiempo);
-
-				driver.findElement(By.id("startDate")).sendKeys(Keys.TAB);
-				Thread.sleep(tiempo);
+				
+				driver.findElement(By.id("startDate")).clear();
+			    
+			    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+			    esperarElemento.sendKeys(fecha1.format(travelDateFrom_1));
+			    
+			    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+			    esperarElemento.sendKeys(Keys.TAB);
+				
+				
 				
 				// ------------------------------------- FECHA PARTIDA -------------------------------------- //
 
@@ -313,18 +310,19 @@ public class FlujoCalculoTravelClub
 				{
 					((JavascriptExecutor) driver).executeScript ("arguments[0].removeAttribute('readonly','readonly')",input);
 				}
-
-				driver.findElement(By.id("endDate")).sendKeys(fecha1.format(travelDateTo_1));
-				Thread.sleep(tiempo);
-
-				driver.findElement(By.id("endDate")).sendKeys(Keys.TAB);
-				Thread.sleep(tiempo);
+				driver.findElement(By.id("endDate")).clear();
+			    
+			    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+			    esperarElemento.sendKeys(fecha2.format(travelDateTo_1));
+			    
+			    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+			    esperarElemento.sendKeys(Keys.TAB);
 
 
 				// ------------------------------------- FECHA REGRESO -------------------------------------- //
 
-				driver.findElement(By.xpath("//*[@id='flightSearchForm']/div[9]/input")).click();
-				Thread.sleep(tiempo);
+			    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='flightSearchForm']/div[9]/input")));
+			    esperarElemento.click();
 
 				//**************************************************************************************************************//
 
@@ -355,11 +353,12 @@ public class FlujoCalculoTravelClub
 				    System.out.println (" ");
 				    
 				    driver.findElement(By.id("startDate")).clear();
-				    driver.findElement(By.id("startDate")).sendKeys(fecha3.format(travelDateFrom_2));
-				    Thread.sleep(tiempo);
 				    
-				    driver.findElement(By.id("startDate")).sendKeys(Keys.TAB);
-				    Thread.sleep(tiempo);
+				    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+				    esperarElemento.sendKeys(fecha3.format(travelDateFrom_2));
+
+				    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+				    esperarElemento.sendKeys(Keys.TAB);
 				    
 				    
 				    // ------------------------------------- FECHA PARTIDA -------------------------------------- //
@@ -372,17 +371,18 @@ public class FlujoCalculoTravelClub
 				    }
 				    
 				    driver.findElement(By.id("endDate")).clear();
-				    driver.findElement(By.id("endDate")).sendKeys(fecha4.format(travelDateTo_2));
-				    Thread.sleep(tiempo);
 				    
-				    driver.findElement(By.id("endDate")).sendKeys(Keys.TAB);
-				    Thread.sleep(tiempo);
+				    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+				    esperarElemento.sendKeys(fecha4.format(travelDateTo_2));
+				    
+				    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+				    esperarElemento.sendKeys(Keys.TAB);
 				    
 					// ------------------------------------- FECHA REGRESO -------------------------------------- //
 				    								
 
-				    driver.findElement(By.xpath("//*[@id='flightSearchForm']/div[9]/input")).click();
-				    Thread.sleep(10000);
+				    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='flightSearchForm']/div[9]/input")));
+				    esperarElemento.click();
 				    
 				    //**************************************Programación del Tercer Reintento***********************************//
 				    
@@ -405,13 +405,14 @@ public class FlujoCalculoTravelClub
 					    System.out.println (" ");
 					    
 					    driver.findElement(By.id("startDate")).clear();
-					    driver.findElement(By.id("startDate")).sendKeys(fecha5.format(travelDateFrom_3));
-					    Thread.sleep(tiempo);
 					    
-					    driver.findElement(By.id("startDate")).sendKeys(Keys.TAB);
-					    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+					    esperarElemento.sendKeys(fecha5.format(travelDateFrom_3));				    
 					    
-					    //System.out.println ("FECHA FORMATEADA 1 ******************************************************************: "+travelDateFrom_3);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("startDate")));
+					    esperarElemento.sendKeys(Keys.TAB);
+					    
+					    
 					    // ------------------------------------- FECHA PARTIDA -------------------------------------- //
 					    		    
 					    List<WebElement> inputs_4 = driver.findElements(By.id("endDate"));
@@ -423,16 +424,17 @@ public class FlujoCalculoTravelClub
 					       
 					    
 					    driver.findElement(By.id("endDate")).clear();
-					    driver.findElement(By.id("endDate")).sendKeys(fecha6.format(travelDateTo_3));
-					    Thread.sleep(tiempo);
 					    
-					    driver.findElement(By.id("endDate")).sendKeys(Keys.TAB);
-					    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+					    esperarElemento.sendKeys(fecha6.format(travelDateTo_3));
+					    
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("endDate")));
+					    esperarElemento.sendKeys(Keys.TAB);
 
 						// ------------------------------------- FECHA REGRESO -------------------------------------- //
 
-					    driver.findElement(By.xpath("//*[@id='flightSearchForm']/div[9]/input")).click();
-					    Thread.sleep(10000);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='flightSearchForm']/div[9]/input")));
+					    esperarElemento.click();
 
 				    	
 				    } 
@@ -441,7 +443,6 @@ public class FlujoCalculoTravelClub
 			    	
 			    	System.out.println("SIN ERROR");
 			    	System.out.println(" ");
-			    	Thread.sleep(tiempo);
 			    	
 					if(!driver.findElements(By.xpath(".//*[@id='bigImgPromoLi']/img")).isEmpty())
 					{
@@ -461,457 +462,568 @@ public class FlujoCalculoTravelClub
 			    	if (activar == false)
 			    	{									
 			    		
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")));
+			    		
 			    		//si consigue promoción
-			    		if (driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")).getText().isEmpty())
+			    		if (esperarElemento.getText().isEmpty())
 			    		{
 			    			
 			    				// SIMBOLO CURRENCY	
-			    			  	String result_tipo_moneda = driver.findElement(By.xpath(".//*[@id='fligthsData']/div[2]/form/div[2]/span[4]/span[1]")).getText();
-					    	    Thread.sleep(tiempo);
-					    	    
+			    				esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='fligthsData']/div[2]/form/div[2]/span[4]/span[1]")));
+			    			  	String result_tipo_moneda =  esperarElemento.getText();
+			    			  	
 					    	    System.out.println ("SELECCIÓN MONEDA  *******************: "+ result_tipo_moneda);
 					    	    
-					    	    String precioTachado = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")).getText();
-					    	
+					    	    
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")));
+					    	    String precioTachado = esperarElemento.getText();
+					    	    
 					    	    System.out.println("Precio Tachado***********************: " + precioTachado);
 					    	    
-					    	    String precioNormal = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[4]/span[3]")).getText();
-					    	    Thread.sleep(tiempo);
+					    	    
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[4]/span[3]")));
+					    	    String precioNormal = esperarElemento.getText();
+					    	    
 					    	    System.out.println("Precio Descuento*********************: " + precioNormal);
 					    	    
 					    	    
-					    	    String precioPasajero = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[3]")).getText();
-					    	    Thread.sleep(tiempo);
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[3]")));
+					    	    String precioPasajero = esperarElemento.getText();
+					    	 
 					    	    System.out.println("Precio Pasajero**********************: " + precioPasajero);
 					    	    
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[3]")));
+					    	    String tasaImpu = esperarElemento.getText();
 					    	    
-					    	    String tasaImpu = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[3]")).getText();
-					    	    Thread.sleep(tiempo);
 					    	    System.out.println("Impuestos y Tasas********************: " + tasaImpu);
 					    	    
-					    	    String gestAgen = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[3]")).getText();
-					    	    Thread.sleep(tiempo);
+					    	    
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[3]")));
+					    	    String gestAgen = esperarElemento.getText();
+					    	    
 					    	    System.out.println("Gestión de Agencias******************: " + gestAgen);
 					    	    
-					    	    											
-					    	    String total1 = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[3]")).getText();
-					    	    Thread.sleep(tiempo);
+					    	    					
+					    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[3]")));
+					    	    String total1 = esperarElemento.getText();
+					    	    
 					    	    System.out.println("Total********************************: " + total1);
 					    	    System.out.println(" ");
 					    	    
+					    	    
+					    		float precioP = Float.parseFloat(precioPasajero);
+					    		float tasasI = Float.parseFloat(tasaImpu);
+					    		float gestA = Float.parseFloat(gestAgen);
+					    		float totalTotal = Float.parseFloat(total1);
+					    		float precioN = Float.parseFloat(precioNormal);
+					    		
+					    		float precioCalculado = precioP + tasasI + gestA;
+					    		
+					  	      // compares the two specified float values
+					    		float f1 = precioCalculado;
+					    		float f2 = totalTotal;
+					    		float f3 = precioN;
+					    		int retval = Float.compare(f1, f2);
+					    		int retval2 =Float.compare(f2, f3);
+							
+					    		if(retval > 0) {
+					    			System.out.println("f1 es mayor a f2");
+					    		} else if(retval < 0) {
+					    			System.out.println("f1 es menor a f2");
+					    		} else {
+					    			System.out.println("f1 es igual a f2");
+					    		}
+					    	    
+					    		
+					    		if(retval2 > 0) {
+					    			System.out.println("f2 es mayor a f3");
+					    		} else if(retval2 < 0) {
+					    			System.out.println("f2 es menor a f3");
+					    		} else {
+					    			System.out.println("f2 es igual a f3");
+					    		}
 			    			
 			    		}
 			    		else
 			    		{
 			    			
 			    			//sino consigue promociones
-			    			String result_tipo_moneda = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[1]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println ("SELECCIÓN MONEDA  *******************: "+ result_tipo_moneda);
-				    	    												  
-				    	    String precioNormal = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println("Precio Descuento*********************: " + precioNormal);
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[1]")));
+				    	    String result_tipo_moneda = esperarElemento.getText();
 			    			
-				    	    String precioPasajero = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[3]")).getText();
-				    	    Thread.sleep(tiempo);
+				    	    System.out.println ("SELECCIÓN MONEDA  *******************: "+ result_tipo_moneda);
+				    	    								
+				    	    
+				    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[3]")));
+				    	    String precioNormal = esperarElemento.getText();
+				    	    
+				    	    System.out.println("Precio Descuento*********************: " + precioNormal);
+				    	    
+				    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[3]")));
+				    	    String precioPasajero = esperarElemento.getText();
+				    	    
 				    	    System.out.println("Precio Pasajero**********************: " + precioPasajero);
 			    			
-				    	    String tasaImpu = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[3]")).getText();
-				    	    Thread.sleep(tiempo);
+				    	    
+				    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[3]")));
+				    	    String tasaImpu = esperarElemento.getText();
+				    	   
 				    	    System.out.println("Impuestos y Tasas********************: " + tasaImpu);
-				    	    											
-				    	  
-			    	    	String gestAgen = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[3]")).getText();
-			    	    	Thread.sleep(tiempo);
+				    	    						
+				    	    
+				    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[3]")));
+				    	    String gestAgen = esperarElemento.getText();
+				    	    
 				    	    System.out.println("Gestión de Agencias******************: " + gestAgen);
 				    	 
+				    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[3]")));
+				    	    String total1 = esperarElemento.getText();
 				    	    
-				    	    String total1 = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[3]")).getText();
-				    	    Thread.sleep(tiempo);
 				    	    System.out.println("Total********************************: " + total1);
 				    	    System.out.println(" ");
 				    	    
+				    	    float precioP = Float.parseFloat(precioPasajero);
+				    		float tasasI = Float.parseFloat(tasaImpu);
+				    		float gestA = Float.parseFloat(gestAgen);
+				    		float totalTotal = Float.parseFloat(total1);
+				    		float precioN = Float.parseFloat(precioNormal);
+				    		
+				    		float precioCalculado = precioP + tasasI + gestA;
+				    		
+				  	      // compares the two specified float values 
+				    		float f1 = precioCalculado;
+				    		float f2 = totalTotal;
+				    		float f3 = precioN;
+				    		int retval = Float.compare(f1, f2);
+				    		int retval2 =Float.compare(f2, f3);
+						
+				    		if(retval > 0) {
+				    			System.out.println("f1 es mayor a f2");
+				    		} else if(retval < 0) {
+				    			System.out.println("f1 es menor a f2");
+				    		} else {
+				    			System.out.println("f1 es igual a f2");
+				    		}
+				    	    
+				    		if(retval2 > 0) {
+				    			System.out.println("f2 es mayor a f3");
+				    		} else if(retval2 < 0) {
+				    			System.out.println("f2 es menor a f3");
+				    		} else {
+				    			System.out.println("f2 es igual a f3");
+				    		}
+				    	 
 			    		}
-				    	  //********************Inicio de recorrido de Filtros *******************//	
-				    		
-					    	   
-				    	    javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[1]/div[1]/h3")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		// *******Filtro Moneda*****//
-				    		
-				    		driver.findElement(By.xpath("//*[@id='toUsd']/label/input")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);
-				    	    
-				    	    
-				    		// *******Filtro Moneda*****// 
-				    		
-			    			//Captura de datos de cantidades en dolares//
-			    																		
-		    				// SIMBOLO CURRENCY								
-		    			  	String result_tipo_moneda_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[1]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println ("SELECCIÓN MONEDA  *******************: "+ result_tipo_moneda_d);
-				    	    
-				    	    													
-				    	    String precioNormal_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[2]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println("Precio Descuento*********************: " + precioNormal_d);
-				    	    
-				    	    													
-				    	    String precioPasajero_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[2]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println("Precio Pasajero**********************: " + precioPasajero_d);
-				    	    
-				    	    												
-				    	    String tasaImpu_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[2]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println("Impuestos y Tasas********************: " + tasaImpu_d);
-				    	                                    
-				    	  
-				    	    String gestAgen_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[2]")).getText();
-				    	    Thread.sleep(tiempo);
-					    	System.out.println("Gestión de Agencias******************: " + gestAgen_d);
-				    	    
-				    	    											
-				    	    String total_d = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[2]")).getText();
-				    	    Thread.sleep(tiempo);
-				    	    System.out.println("Total********************************: " + total_d);
-				    	    System.out.println(" ");
-				    	    
-				    	    javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    	    
-				    		
-				    		//************************ Filtro Escalas ***************//
-				    		
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[2]/div[1]/h3/i")).click();
-				    		Thread.sleep(tiempo);
-
-				    		//***Captura de Valores**//
-				    		
-				    		//numero de todas las escalas
-				    		driver.findElement(By.xpath("//*[@id='allStops']")).getText();
-				    		System.out.println("Total de todas las Escalas: " + driver.findElement(By.xpath("//*[@id='allStops']")).getText());
-				    		
-				    		//numero de Directo
-				    		String escalaDirecto = driver.findElement(By.xpath("//*[@id='directStop']")).getText();
-				    		System.out.println("Total de Vuelos Directos: " + escalaDirecto);
-				    		
-				    		//numero de registros una escala
-				    		String unaEscala = driver.findElement(By.xpath("//*[@id='oneStop']")).getText();
-				    		System.out.println("Total de Vuelos con 1 Escala: " + unaEscala);
-				    		
-				    		
-				    		//numero de registros de 2 o mas escalas
-				    		String dosEscalas = driver.findElement(By.xpath("//*[@id='twoStop']")).getText();
-				    		System.out.println("Total de Vuelos con 2 o mas Escalas: " + dosEscalas);
-				    		System.out.println(" ");
-				    		//***Fin Captura de Valores**//
-				    		
-				    		
-				    		//Directo
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[2]/label/input")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		int numDirecto = Integer.parseInt(escalaDirecto);
-				    		
-				    		if (numDirecto > 0)
-				    		{
-				    										
-				    			String varDirecto = driver.findElement(By.xpath("//li[2]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			String varDirecto2 = driver.findElement(By.xpath("//li[4]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			
-				    			if ( varDirecto.equals("Directo") && varDirecto2.equals("Directo"))
-				    			{
-
-				    				System.out.println("Los itinerarios Directos que se muestran, son Correctos");
-				    				
-				    			}
-				    			else
-				    			{
-				    				System.out.println("Los itinerarios Directos que se muestran, son Incorrectos");
-				    			}
-				    		}
-				    		else
-				    		{
-				    			String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
-				    			System.out.println("No se encontraron itinerarios Directos");
-				    			System.out.println(" ");
-				    			
-				    		}
-				    		
-				    		javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		//1 Escala
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[3]/label/input")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		
-				    		int numUnaEscala = Integer.parseInt(unaEscala);
-				    		
-				    		if (numUnaEscala > 0)
-				    		{
-				    			
-				    			String varUnaEscala = driver.findElement(By.xpath("//li[2]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			String varUnaEscala2 = driver.findElement(By.xpath("//li[4]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			
-				    			if ( varUnaEscala.equals("1 escala")  &&  varUnaEscala2.equals("1 escala") )
-				    			{
-				    				
-				    				System.out.println("Los itinerarios de 1 escala que se muestran, son Correctos");
-				    				System.out.println(" ");
-				    				
-				    			}
-				    			else
-				    			{
-				    			
-				    				System.out.println("Los itinerarios de 1 escala que se muestran, no son Correctos");
-				    				System.out.println(" ");
-				    			}
-				    		}
-				    		else
-				    		{
-				    			
-				    		String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
-				    		System.out.println("No se encontraron itinerarios con 1 escala");
-				    		System.out.println(" ");
-				    		
-				    		}
-				    		
-				    		
-				    		javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		
-				    		//2 o mas Escalas		     
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[4]/label/input")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);
-				    		
-
-				    		int numDosOMasEscala = Integer.parseInt(dosEscalas);
-				    		
-				    		if (numDosOMasEscala > 0){
-				    			
-				    			
-				    			String varDosEscala = driver.findElement(By.xpath("//li[2]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			                  
-				    			String varDosEscala2 = driver.findElement(By.xpath("//li[4]/ul/li[3]/a/span[1]")).getText();
-				    			Thread.sleep(tiempo);
-				    			
-				    			if ( varDosEscala.equals("") && varDosEscala2.equals("") )
-				    			{
-				    				
-				    				System.out.println("Los itinerarios de 2 o más escalas que se muestran, son Correctos");
-				    				System.out.println(" ");
-				    				
-				    			}
-				    			else
-				    			{
-				    				System.out.println("Los itinerarios de 2 escala que se muestran, no son Correctos");
-				    				System.out.println(" ");
-				    			}
-				    		}
-				    		else
-				    		{
-				    			String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
-					    		System.out.println("No se encontraron itinerarios con 2 escala");
-					    		System.out.println(" ");
-				    		}
-				    		
-				    		javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		
-				    		//Todas las Escalas
-				    		driver.findElement(By.xpath("//*[@id='clearStopsFilter']")).click();
-				    		Thread.sleep(tiempo);
-
-				    		
-				    		//Fin Clic Escala
-				    		driver.findElement(By.xpath("//*[@id='filterResultForm']/div[2]/div[1]/h3/i")).click();
-				    		Thread.sleep(tiempo);
+				    	//********************Inicio de recorrido de Filtros *******************//	
+			    		
+				    	   
+			    	    javascript.executeScript("scroll(0, 300);");
+			    		
+			    		
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[1]/div[1]/h3")));
+			    	    esperarElemento.click();
+			    	    
+			    		// *******Filtro Moneda*****//
+			    		
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='toUsd']/label/input")));
+			    	    esperarElemento.click();
+			    	    
+			    		javascript.executeScript("scroll(0, -1200);");
+			    	    
+			    	    
+			    		// *******Filtro Moneda*****// 
+			    		
+		    			//Captura de datos de cantidades en dolares//
+		    																		
+	    				// SIMBOLO CURRENCY
+			    		
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[1]")));
+			    	    String result_tipo_moneda = esperarElemento.getText();
+			    		
+			    	    System.out.println ("SELECCIÓN MONEDA  *******************: "+ result_tipo_moneda);
+			    	    
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/span[3]/span[2]")));
+			    	    String precioNormal = esperarElemento.getText();								
+			    	    
+			    	    System.out.println("Precio Descuento*********************: " + precioNormal);
+			    	    
+			    	    				
+			    	    
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[1]/span[2]")));
+			    	    String precioPasajero = esperarElemento.getText();
+			    	    
+			    	    System.out.println("Precio Pasajero**********************: " + precioPasajero);
+			    	    
+			    	    
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[2]/span[2]")));
+			    	    String tasaImpu = esperarElemento.getText();
+			    	    
+			    	    System.out.println("Impuestos y Tasas********************: " + tasaImpu);
+			    	                                    
+			    	    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[3]/span[2]")));
+			    	    String gestAgen = esperarElemento.getText();
+			    	    
+				    	System.out.println("Gestión de Agencias******************: " + gestAgen);
+			    	    
+				    	esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/ul/li[4]/span[2]")));
+			    	    String total1 = esperarElemento.getText();							
 				    	
-				    		//************************ Fin Filtro Escalas ***************//
-				    		
-				    		
-				    		//************************ Filtro Aerolíneas ***************//
-				    		
-				    		//Clic Aerolíneas 				
-				    		driver.findElement(By.xpath("//*[@id='carriersFilter']/div[1]/h3/i")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		//Obtengo el nombre de la Aerolínea
-				    		String nombreAerol = driver.findElement(By.xpath("//*[@id='filterResultForm']/div[3]/div[2]/div[2]/label/span")).getText();
-				    		
-				    		String nameAerol = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[1]/ul/li[2]/ul/li[1]/label")).getText();
-				    											   
-				    		if (nombreAerol.equals("American Airlines") && itemDTO.getAirline().equals("AA")){
+			    	    System.out.println("Total********************************: " + total1);
+			    	    System.out.println(" ");
+			    	    
+			    	    javascript.executeScript("scroll(0, 300);");
+			    		
+			    	    float precioP = Float.parseFloat(precioPasajero);
+			    		float tasasI = Float.parseFloat(tasaImpu);
+			    		float gestA = Float.parseFloat(gestAgen);
+			    		float totalTotal = Float.parseFloat(total1);
+			    		float precioN = Float.parseFloat(precioNormal);
+			    		
+			    		float precioCalculado = precioP + tasasI + gestA;
+			    		
+			  	      // compares the two specified float values
+			    		float f1 = precioCalculado;
+			    		float f2 = totalTotal;
+			    		float f3 = precioN;
+			    		int retval = Float.compare(f1, f2);
+			    		int retval2 =Float.compare(f2, f3);
+					
+			    		if(retval > 0) {
+			    			System.out.println("f1 es mayor a f2");
+			    		} else if(retval < 0) {
+			    			System.out.println("f1 es menor a f2");
+			    		} else {
+			    			System.out.println("f1 es igual a f2");
+			    		}
+			    	    
+			    		if(retval2 > 0) {
+			    			System.out.println("f2 es mayor a f3");
+			    		} else if(retval2 < 0) {
+			    			System.out.println("f2 es menor a f3");
+			    		} else {
+			    			System.out.println("f2 es igual a f3");
+			    		}
+			    	 
+			    		
+		    		
+			    		
+			    		//cambia a tipo moneda pesos
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='toWn']/label/input")));
+			    	    esperarElemento.click();
+			    		
+			    		
+			    		//************************ Filtro Escalas ***************//
+			    		
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[2]/div[1]/h3/i")));
+			    	    esperarElemento.click();
+			    		
+			    		
+			    		//***Captura de Valores**//
+			    		
+			    		//numero de todas las escalas
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='allStops']")));
+			    		esperarElemento.getText();
+			    		
+			    		System.out.println("Total de todas las Escalas: " + esperarElemento.getText());
+			    		
+			    		//numero de Directo
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='directStop']")));
+			    	    String escalaDirecto = esperarElemento.getText();
+			    		
+			    		System.out.println("Total de Vuelos Directos: " + escalaDirecto);
+			    		
+			    		//numero de registros una escala
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='oneStop']")));
+			    	    String unaEscala = esperarElemento.getText();
+			    	    
+			    		System.out.println("Total de Vuelos con 1 Escala: " + unaEscala);
+			    		
+			    		
+			    		//numero de registros de 2 o mas escalas
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='twoStop']")));
+			    	    String dosEscalas = esperarElemento.getText();
+			    		
+			    		System.out.println("Total de Vuelos con 2 o mas Escalas: " + dosEscalas);
+			    		System.out.println(" ");
+			    		//***Fin Captura de Valores**//
+			    		
+			    		
+			    		//Directo
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[2]/label/input")));
+			    		esperarElemento.click();
+			    		
+			    		javascript.executeScript("scroll(0, -1200);");
+			    		
+			    		int numDirecto = Integer.parseInt(escalaDirecto);
+			    		
+			    		if (numDirecto > 0)
+			    		{
+			    						
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[2]/ul/li[3]/a/span[1]")));
+			    			String varDirecto = esperarElemento.getText();
+			    			
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[4]/ul/li[3]/a/span[1]")));
+			    			String varDirecto2 = esperarElemento.getText();
+			    			
+			    			if ( varDirecto.equals("Directo") && varDirecto2.equals("Directo"))
+			    			{
+
+			    				System.out.println("Los itinerarios Directos que se muestran, son Correctos");
+			    				
+			    			}
+			    			else
+			    			{
+			    				System.out.println("Los itinerarios Directos que se muestran, son Incorrectos");
+			    			}
+			    		}
+			    		else
+			    		{
+			    			String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
+			    			System.out.println("No se encontraron itinerarios Directos");
+			    			System.out.println(" ");
+			    			
+			    		}
+			    		
+			    		javascript.executeScript("scroll(0, 300);");
+			    		
+			    		//1 Escala
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[3]/label/input")));
+			    		esperarElemento.click();
+			    		
+			    		javascript.executeScript("scroll(0, -1200);");
+			    	
+			    		int numUnaEscala = Integer.parseInt(unaEscala);
+			    		
+			    		if (numUnaEscala > 0)
+			    		{
+			    		
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[2]/ul/li[3]/a/span[1]")));
+			    			String varUnaEscala = esperarElemento.getText();
+			    			
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[4]/ul/li[3]/a/span[1]")));
+			    			String varUnaEscala2 = esperarElemento.getText();
+			    			
+			    			
+			    			if ( varUnaEscala.equals("1 escala")  &&  varUnaEscala2.equals("1 escala") )
+			    			{
+			    				
+			    				System.out.println("Los itinerarios de 1 escala que se muestran, son Correctos");
+			    				System.out.println(" ");
+			    				
+			    			}
+			    			else
+			    			{
+			    			
+			    				System.out.println("Los itinerarios de 1 escala que se muestran, no son Correctos");
+			    				System.out.println(" ");
+			    			}
+			    		}
+			    		else
+			    		{
+			    			
+			    		String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
+			    		System.out.println("No se encontraron itinerarios con 1 escala");
+			    		System.out.println(" ");
+			    		
+			    		}
+			    		
+			    		javascript.executeScript("scroll(0, 300);");
+			    		
+			    		//2 o mas Escalas		     
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[2]/div[2]/div[4]/label/input")));
+		    			esperarElemento.click();
+			    		
+			    		
+			    		javascript.executeScript("scroll(0, -1200);");
+			    		
+
+			    		int numDosOMasEscala = Integer.parseInt(dosEscalas);
+			    		
+			    		if (numDosOMasEscala > 0){
+			    			
+			    			
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[2]/ul/li[3]/a/span[1]")));
+			    			String varDosEscala = esperarElemento.getText();
+			    			
+			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[4]/ul/li[3]/a/span[1]")));
+			    			String varDosEscala2 = esperarElemento.getText();
+			    			
+			    			if ( varDosEscala.equals("") && varDosEscala2.equals("") )
+			    			{
+			    				
+			    				System.out.println("Los itinerarios de 2 o más escalas que se muestran, son Correctos");
+			    				System.out.println(" ");
+			    				
+			    			}
+			    			else
+			    			{
+			    				System.out.println("Los itinerarios de 2 escala que se muestran, no son Correctos");
+			    				System.out.println(" ");
+			    			}
+			    		}
+			    		else
+			    		{
+			    			String mensajeSinResult = driver.findElement(By.xpath("//*[@id='errorMessageBottom']/div")).getText();
+				    		System.out.println("No se encontraron itinerarios con 2 escala");
+				    		System.out.println(" ");
+			    		}
+			    		
+			    		javascript.executeScript("scroll(0, 300);");
+			    		
+			    		
+			    		//Todas las Escalas
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='clearStopsFilter']")));
+		    			esperarElemento.click();
+			    		
+			    		//Fin Clic Escala
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='filterResultForm']/div[2]/div[1]/h3/i")));
+		    			esperarElemento.click();
+		    			
+			    		//************************ Fin Filtro Escalas ***************//
+			    		
+			    		
+			    		//************************ Filtro Aerolíneas ***************//
+			    		
+			    		//Clic Aerolíneas 				
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='carriersFilter']/div[1]/h3/i")));
+		    			esperarElemento.click();
+			    		
+			    		
+			    		//Obtengo el nombre de la Aerolínea
+			    		String nombreAerol = driver.findElement(By.xpath("//*[@id='filterResultForm']/div[3]/div[2]/div[2]/label/span")).getText();
+			    		
+			    		String nameAerol = driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[1]/ul/li[2]/ul/li[1]/label")).getText();
+			    											   
+			    		if (nombreAerol.equals("American Airlines") && itemDTO.getAirline().equals("AA")){
+			    			
+			    			System.out.println("Nombre de la Aerolínea Itinerario: " + nombreAerol + "Promoción: " + itemDTO.getAirline());
+			    			System.out.println(" ");
+			    			System.out.println("La Aerolínea corresponde con la establecida en la regla comercial");
+			    			
+			    		}
+			    		else
+			    		{
+			    			if (nameAerol.equals("Delta") && itemDTO.getAirline().equals("DL"))
+			    			{
 				    			
 				    			System.out.println("Nombre de la Aerolínea Itinerario: " + nombreAerol + "Promoción: " + itemDTO.getAirline());
 				    			System.out.println(" ");
 				    			System.out.println("La Aerolínea corresponde con la establecida en la regla comercial");
-				    			
-				    		}
-				    		else
-				    		{
-				    			if (nameAerol.equals("Delta") && itemDTO.getAirline().equals("DL"))
-				    			{
-					    			
+			    			}
+			    			else
+			    			{
+			    				
+			    				if (nombreAerol.equals("Latam") && itemDTO.getAirline().equals("LA"))
+			    				{
 					    			System.out.println("Nombre de la Aerolínea Itinerario: " + nombreAerol + "Promoción: " + itemDTO.getAirline());
-					    			System.out.println(" ");
 					    			System.out.println("La Aerolínea corresponde con la establecida en la regla comercial");
-				    			}
-				    			else
-				    			{
-				    				
-				    				if (nombreAerol.equals("Latam") && itemDTO.getAirline().equals("LA"))
-				    				{
-						    			System.out.println("Nombre de la Aerolínea Itinerario: " + nombreAerol + "Promoción: " + itemDTO.getAirline());
-						    			System.out.println("La Aerolínea corresponde con la establecida en la regla comercial");
-						    			
-				    				}
-				    			}
-				    		}
-				    				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);	
-				    		
-				    		javascript.executeScript("scroll(0, 300);");
-				    		Thread.sleep(tiempo);
-				    		
-		 		
-				    		//Clic cerrar pestaña Aerolínea
-				    		driver.findElement(By.xpath("//*[@id='carriersFilter']/div[1]/h3/i")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		
-				    	//*************************Fin de recorrido Filtros ************************//		
-				    		
+					    			
+			    				}
+			    			}
+			    		}
+			    				    		
+			    		javascript.executeScript("scroll(0, -1200);");
+			    		
+			    		javascript.executeScript("scroll(0, 300);");
+	 		
+			    		//Clic cerrar pestaña Aerolínea
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='carriersFilter']/div[1]/h3/i")));
+		    			esperarElemento.click();
+			    		
+			    		//******************* Fin de recorrido Filtros **********************//					    		
 				    		
 				    	//**********************Identificación del Pasajero************************//
 				    		
-				    		javascript.executeScript("scroll(0, -1200);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		driver.findElement(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/div/input[3]")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		javascript.executeScript("scroll(0, 300);");
-						    Thread.sleep(tiempo);
-						    
-						    javascript.executeScript("scroll(0, 600);");
-						    Thread.sleep(tiempo);
-						    
-						    javascript.executeScript("scroll(0, 1200);");
-						    Thread.sleep(tiempo);
-						     
-						    driver.findElement(By.xpath("//label/input")).click();
-						    Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.xpath("//div[3]/div/div/input")).clear();
-						    Thread.sleep(tiempo);
+			    		javascript.executeScript("scroll(0, -1200);");
+			    		
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/div/input[3]")));
+		    			esperarElemento.click();
+			    		
+			    		javascript.executeScript("scroll(0, 300);");
+					    
+					    javascript.executeScript("scroll(0, 600);");
+					    
+					    javascript.executeScript("scroll(0, 1200);");
+					     
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label/input")));
+		    			esperarElemento.click();
+					    
+					    driver.findElement(By.xpath("//div[3]/div/div/input")).clear();
 
-						    driver.findElement(By.xpath("//div[3]/div/div/input")).sendKeys("Armando");
-						    Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.xpath("//div[2]/input")).clear();
-						    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[3]/div/div/input")));
+		    			esperarElemento.sendKeys("Armando");
+					    
+					    driver.findElement(By.xpath("//div[2]/input")).clear();
 
-						    driver.findElement(By.xpath("//div[2]/input")).sendKeys("Figueredo");
-						    Thread.sleep(tiempo);
-			  
-						    driver.findElement(By.id("selectDoc")).click();
-						    Thread.sleep(tiempo);
-						    
-						    //driver.findElement(By.id("//*[@id='selectDoc']/option[1]")).click();
-						    //Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.id("rutNum0")).clear();
-							
-						    driver.findElement(By.id("rutNum0")).sendKeys("401134814");
-						    Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.xpath("//div[5]/div/input")).clear();
-
-						    driver.findElement(By.xpath("//div[5]/div/input")).click();
-						    
-						    driver.findElement(By.xpath("//div[5]/div/input")).sendKeys("07/05/1983");
-						    Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.xpath("//div[2]/div/input")).clear();
+					    
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[2]/input")));
+		    			esperarElemento.sendKeys("Figueredo");
+		  
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("selectDoc")));
+			    		esperarElemento.click();
+			    								 
+					    driver.findElement(By.id("rutNum0")).clear();
 						
-						    driver.findElement(By.xpath("//div[2]/div/input")).sendKeys("contacto@valorunico.cl");
-						    Thread.sleep(tiempo);
-							
-						    driver.findElement(By.xpath("//div[2]/div[2]/input")).clear();
-							
-						    driver.findElement(By.xpath("//div[2]/div[2]/input")).sendKeys("995894653");
-						    Thread.sleep(tiempo);
-							
-						    javascript.executeScript("scroll(0, 1200);");
-						    Thread.sleep(tiempo);
-						    
-						    driver.findElement(By.id("inlineCheckbox1")).click();
-						    Thread.sleep(tiempo);
+					    driver.findElement(By.id("rutNum0")).sendKeys("401134814");
+					    Thread.sleep(tiempo);
+					    
+					    driver.findElement(By.xpath("//div[5]/div/input")).clear();
+
+					    driver.findElement(By.xpath("//div[5]/div/input")).click();
+					    
+					    driver.findElement(By.xpath("//div[5]/div/input")).sendKeys("07/05/1983");
+					    Thread.sleep(tiempo);
+					    
+					    driver.findElement(By.xpath("//div[2]/div/input")).clear();
 					
-						    driver.findElement(By.id("btnContinue")).click();
-						    Thread.sleep(tiempo);
+					    driver.findElement(By.xpath("//div[2]/div/input")).sendKeys("contacto@valorunico.cl");
+					    Thread.sleep(tiempo);
+						
+					    driver.findElement(By.xpath("//div[2]/div[2]/input")).clear();
+						
+					    driver.findElement(By.xpath("//div[2]/div[2]/input")).sendKeys("995894653");
+					    Thread.sleep(tiempo);
+						
+					    javascript.executeScript("scroll(0, 1200);");
+					    Thread.sleep(tiempo);
+					    
+					    driver.findElement(By.id("inlineCheckbox1")).click();
+					    Thread.sleep(tiempo);
+				
+					    driver.findElement(By.id("btnContinue")).click();
+					    Thread.sleep(tiempo);
 					
 				    		
 				    	//**********************Fin Identificación del Pasajero************************//
 				    		
 						//****************************Inicio del Login ********************************//
 
-						    driver.findElement(By.xpath("//*[@id='rutemp2222']")).sendKeys("1-9");
-				    		//driver.findElement(By.id("rutemp2222")).sendKeys("1-9");
-				    		Thread.sleep(tiempo);
+					    driver.findElement(By.xpath("//*[@id='rutemp2222']")).sendKeys("1-9");
+			    		//driver.findElement(By.id("rutemp2222")).sendKeys("1-9");
+			    		Thread.sleep(tiempo);
+			    		
+			    		driver.findElement(By.xpath("//*[@id='pin222']")).sendKeys("123456");
+			    		//driver.findElement(By.id("pin222")).sendKeys("123456");
+			    		Thread.sleep(tiempo);
+			    		
+			    		driver.findElement(By.id("idIngresar")).click();
+			    		Thread.sleep(tiempo);
 				    		
-				    		driver.findElement(By.xpath("//*[@id='pin222']")).sendKeys("123456");
-				    		//driver.findElement(By.id("pin222")).sendKeys("123456");
-				    		Thread.sleep(tiempo);
-				    		
-				    		driver.findElement(By.id("idIngresar")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    	//****************************Inicio del Login ********************************//
+				    	//************************** Fin Inicio del Login ********************************//
 
-				    		Thread.sleep(10000);
-				    		
-				    	
-				    	//*******************Tus productos pendientes de pago ************************//
-				    	
-				    		javascript.executeScript("scroll(0, 600);");
-				    		Thread.sleep(tiempo);
-				    		
-				    		driver.findElement(By.xpath("//*[@id='acceptTC']")).click();
-				    		Thread.sleep(tiempo);
-				    		
-				    		driver.findElement(By.id("btnPagar")).click();
-				    		Thread.sleep(tiempo);
+			    		Thread.sleep(10000);
+			    		
+			    	
+			    	//*******************Tus productos pendientes de pago ************************//
+			    	
+			    		javascript.executeScript("scroll(0, 600);");
+			    		Thread.sleep(tiempo);
+			    		
+			    		driver.findElement(By.xpath("//*[@id='acceptTC']")).click();
+			    		Thread.sleep(tiempo);
+			    		
+			    		driver.findElement(By.id("btnPagar")).click();
+			    		Thread.sleep(tiempo);
 				    		
 			
 				    		
