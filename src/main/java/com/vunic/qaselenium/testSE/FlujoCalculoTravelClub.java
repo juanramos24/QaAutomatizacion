@@ -17,6 +17,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.relevantcodes.extentreports.ExtentReports;
@@ -842,11 +843,15 @@ public class FlujoCalculoTravelClub
 			    		if (numDosOMasEscala > 0){
 			    			
 			    			
-			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[2]/ul/li[3]/a/span[1]")));
-			    			String varDosEscala = esperarElemento.getText();
+			    			String varDosEscala = driver.findElement(By.xpath("//li[2]/ul/li[3]/a/span[1]")).getText();
 			    			
-			    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[4]/ul/li[3]/a/span[1]")));
-			    			String varDosEscala2 = esperarElemento.getText();
+			    			//esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[2]/ul/li[3]/a/span[1]")));
+			    			//String varDosEscala = esperarElemento.getText();
+			    			
+			    			String varDosEscala2 = driver.findElement(By.xpath("//li[4]/ul/li[3]/a/span[1]")).getText();
+			    			
+			    			//esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//li[4]/ul/li[3]/a/span[1]")));
+			    			//String varDosEscala2 = esperarElemento.getText();
 			    			
 			    			if ( varDosEscala.equals("") && varDosEscala2.equals("") )
 			    			{
@@ -932,8 +937,8 @@ public class FlujoCalculoTravelClub
 			    		
 			    		//******************* Fin de recorrido Filtros **********************//					    		
 				    		
-				    	//**********************Identificación del Pasajero************************//
-				    		
+		    			//**********************Identificación del Pasajero*******************//
+			    		
 			    		javascript.executeScript("scroll(0, -1200);");
 			    		
 			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='fligthsData']/div[2]/form/div[2]/div/input[3]")));
@@ -949,91 +954,135 @@ public class FlujoCalculoTravelClub
 		    			esperarElemento.click();
 					    
 					    driver.findElement(By.xpath("//div[3]/div/div/input")).clear();
-
+					    
 					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[3]/div/div/input")));
 		    			esperarElemento.sendKeys("Armando");
-					    
+		    			
 					    driver.findElement(By.xpath("//div[2]/input")).clear();
 
 					    
 					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[2]/input")));
 		    			esperarElemento.sendKeys("Figueredo");
-		  
+					    
 		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("selectDoc")));
-			    		esperarElemento.click();
-			    								 
+		    			esperarElemento.click();
+		    			
+					    //driver.findElement(By.id("//*[@id='selectDoc']/option[1]")).click();
+					    //Thread.sleep(tiempo);
+					    
 					    driver.findElement(By.id("rutNum0")).clear();
 						
-					    driver.findElement(By.id("rutNum0")).sendKeys("401134814");
-					    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("rutNum0")));
+		    			esperarElemento.sendKeys("401134814");
 					    
 					    driver.findElement(By.xpath("//div[5]/div/input")).clear();
 
-					    driver.findElement(By.xpath("//div[5]/div/input")).click();
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[5]/div/input")));
+		    			esperarElemento.click();
 					    
-					    driver.findElement(By.xpath("//div[5]/div/input")).sendKeys("07/05/1983");
-					    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[5]/div/input")));
+		    			esperarElemento.sendKeys("07/05/1983");
 					    
 					    driver.findElement(By.xpath("//div[2]/div/input")).clear();
 					
-					    driver.findElement(By.xpath("//div[2]/div/input")).sendKeys("contacto@valorunico.cl");
-					    Thread.sleep(tiempo);
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[2]/div/input")));
+		    			esperarElemento.sendKeys("contacto@valorunico.cl");
 						
 					    driver.findElement(By.xpath("//div[2]/div[2]/input")).clear();
 						
-					    driver.findElement(By.xpath("//div[2]/div[2]/input")).sendKeys("995894653");
-					    Thread.sleep(tiempo);
-						
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[2]/div[2]/input")));
+		    			esperarElemento.sendKeys("995894653");
+					    
 					    javascript.executeScript("scroll(0, 1200);");
-					    Thread.sleep(tiempo);
 					    
 					    driver.findElement(By.id("inlineCheckbox1")).click();
 					    Thread.sleep(tiempo);
-				
-					    driver.findElement(By.id("btnContinue")).click();
-					    Thread.sleep(tiempo);
-					
-				    		
-				    	//**********************Fin Identificación del Pasajero************************//
-				    		
-						//****************************Inicio del Login ********************************//
+					    
+					    esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inlineCheckbox1")));
+		    			esperarElemento.click();
+					    
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnContinue")));
+		    			esperarElemento.click();
+		    			
+		    			//**********************Fin Identificación del Pasajero************************//
+			    		
+		    			//****************************Inicio del Login ********************************//
 
-					    driver.findElement(By.xpath("//*[@id='rutemp2222']")).sendKeys("1-9");
 			    		//driver.findElement(By.id("rutemp2222")).sendKeys("1-9");
-			    		Thread.sleep(tiempo);
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='rutemp2222']")));
+		    			esperarElemento.sendKeys("1-9");
 			    		
-			    		driver.findElement(By.xpath("//*[@id='pin222']")).sendKeys("123456");
 			    		//driver.findElement(By.id("pin222")).sendKeys("123456");
-			    		Thread.sleep(tiempo);
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='pin222']")));
+		    			esperarElemento.sendKeys("123456");
 			    		
-			    		driver.findElement(By.id("idIngresar")).click();
-			    		Thread.sleep(tiempo);
-				    		
-				    	//************************** Fin Inicio del Login ********************************//
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("idIngresar")));
+		    			esperarElemento.click();
+		    			
+		    			//****************************Inicio del Login ********************************//
 
-			    		Thread.sleep(10000);
+		    			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		    			
 			    		
-			    	
-			    	//*******************Tus productos pendientes de pago ************************//
-			    	
+		    			//*******************Tus productos pendientes de pago ************************//
+				    	
 			    		javascript.executeScript("scroll(0, 600);");
-			    		Thread.sleep(tiempo);
 			    		
-			    		driver.findElement(By.xpath("//*[@id='acceptTC']")).click();
-			    		Thread.sleep(tiempo);
+			    		esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnPagar")));
+		    			esperarElemento.click();
+				    	
+		    			//Se captura el mensaje de error al no marcar la aceptación de términos
+		    			driver.findElement(By.xpath("//*[@id=\"order-pay\"]/table/tbody/tr/td/div")).getText();
+		    	
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='acceptTC']")));
+		    			esperarElemento.click();
+		    			
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnPagar")));
+		    			esperarElemento.click();
+				    		
+		
 			    		
-			    		driver.findElement(By.id("btnPagar")).click();
-			    		Thread.sleep(tiempo);
-				    		
-			
-				    		
-				    	//******************* Ingresa los Dólares-Premio a canjear ************************//	
-				    		
-				    		
-				    		
-				    		
-				    		
-				    	//******************* Fin Ingresa los Dólares-Premio a canjear ************************//	
+				    	//******************* Ingresa los Dólares-Premio a canjear ****************************//
+			    			
+			    		//******************* Fin Ingresa los Dólares-Premio a canjear ************************//
+			    			
+			    			
+			    		//******************* Monto a cancelar con Tarjeta de Crédito ************************//
+			    		
+		    			
+			    		//capturando el monto a pagar
+		    			driver.findElement(By.xpath("//*[@id='panelazul']/b/span")).getText();
+		    			
+		    			//realizar validación con los montos capturados en el itinerario
+		    			
+		    			javascript.executeScript("scroll(0, 100);");
+		    			
+			    		//tarjeta de crédito
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("numeroTarjeta")));
+		    			esperarElemento.sendKeys("4051885600446623");
+		    			
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("select1")));
+		    			new Select(esperarElemento).selectByValue("1");
+		    			//new Select(driver.findElement(By.id("select1"))).selectByValue("1");	    			
+		    			
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("select2")));
+		    			new Select(esperarElemento).selectByValue("18");
+		    			
+		    			//código de seguridad
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("codigoVerificacion")));
+		    			esperarElemento.sendKeys("123");
+		    		
+		    			//número de cuotas
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("numeroCuotas")));
+		    			new Select(esperarElemento).selectByValue("0");
+		    			
+		    			javascript.executeScript("scroll(0, 600);");
+		    			
+		    			//btn pagar
+		    			esperarElemento = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("btnPagar")));
+		    			esperarElemento.click();
+		    			
+		    			//******************* Fin Monto a cancelar con Tarjeta de Crédito ********************//	
 				    		
 				    		
 			    		 		
